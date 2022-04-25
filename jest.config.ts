@@ -19,8 +19,9 @@ const config = {
 };
 
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-module.exports = async () => {
-  return {
-    ...config,
-  };
-};
+export default config;
+// module.exports = async () => {
+//   return {
+//     ...config,
+//   };
+// };

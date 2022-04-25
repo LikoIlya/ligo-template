@@ -5,12 +5,11 @@ dotenv.config();
 
 export const config = {
   repoName: "example-core",
-  ligoVersion: "0.33.0",
+  ligoVersion: "0.40.0",
   preferredLigoFlavor: "pascaligo",
   networks: {
     sandbox: {
-      host: "http://localhost",
-      port: 20000,
+      rpc: "http://localhost:20000",
       protocol: TezosProtocols.HANGZHOU,
       genesisBlockHash: "random",
       defaultSignerSK: "edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq",
@@ -33,17 +32,15 @@ export const config = {
       },
     },
     testnet: {
-      host: "https://rpc.hangzhounet.teztnets.xyz",
-      port: 443,
+      rpc: "https://rpc.hangzhounet.teztnets.xyz",
       faucet: null,
     },
     mainnet: {
-      host: "https://mainnet-tezos.giganode.io",
-      port: 443,
+      rpc: "https://mainnet-tezos.giganode.io"
     },
   },
   deployerSK:
-    process.env.DEX_DEPLOYER_SK ||
+    process.env.DEPLOYER_SK ||
     "edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq",
   deployNetwork: process.env.NETWORK || "sandbox",
   contractsDirectory: "contracts/main",

@@ -1,23 +1,23 @@
-const { Tezos, signerAlice, signerBob } = require("./utils/cli");
-const { migrate } = require("../scripts/helpers");
-const { rejects, strictEqual, notStrictEqual } = require("assert");
-
-const { alice } = require("../scripts/sandbox/accounts");
+import { Tezos, signerAlice, signerBob } from "./utils/cli";
+import config from "../config";
+import exampleCode from "../build/example.json";
+import { rejects, strictEqual, notStrictEqual }  from "assert";
+import { confirmOperation } from "../utils/confirmation";
 
 describe("Example test", async function () {
   let contract;
 
-  before(async () => {
+  beforeAll(async () => {
     try {
       Tezos.setSignerProvider(signerAlice);
       const storage = require("./storage/storage");
 
-      const deployedContract = await migrate(
-        Tezos,
-        "Example",
+      const deployedContract = await Tezos.contract.originate({
         storage,
-      );
-      contract = await Tezos.contract.at(deployedContract);
+        code: exampleCode
+      });
+      await confirmOperation(Tezos, deployedContract.hash);
+      contract = await Tezos.contract.at(deployedContract.contractAddress);
 
     } catch (e) {
       console.log(e);
@@ -26,7 +26,7 @@ describe("Example test", async function () {
 
   describe("Testing entrypoint: Example", async function () {
     it("Revert example", async function () {
-      await rejects(contract.methods.example(2).send(), err => {
+      await rejects(contract.methods.example(2).send(), (err: Error) => {
         strictEqual(err.message, "Example");
         return true;
       });

@@ -1,4 +1,4 @@
-function do(
+function act(
   const param           : example_param_t;
   var s                 : storage_t)
                         : storage_t is

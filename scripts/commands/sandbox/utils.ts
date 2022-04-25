@@ -43,12 +43,17 @@ export const flextesaProtocols: FlextesaTezosProtocols = {
 
 export async function useSandbox(options: { up?: boolean; down?: boolean }) {
   const running = await isFlextesaRunning();
+  const rpc = config.networks.sandbox.rpc;
+  const [host, port] = [
+    rpc.substring(0, rpc.lastIndexOf(":")),
+    rpc.substring(rpc.lastIndexOf(":"), rpc.length),
+  ];
   if (Object.keys(options).length === 0) {
     if (running) await stopFlextesa();
     else
       await startFlextesa({
-        host: config.networks.sandbox.host,
-        port: config.networks.sandbox.port,
+        host,
+        port: parseInt(port),
         accounts: config.networks.sandbox.accounts,
       });
   } else {
@@ -59,8 +64,8 @@ export async function useSandbox(options: { up?: boolean; down?: boolean }) {
       return;
     } else if (options.up)
       await startFlextesa({
-        host: config.networks.sandbox.host,
-        port: config.networks.sandbox.port,
+        host,
+        port: parseInt(port),
         accounts: config.networks.sandbox.accounts,
       });
     else if (options.down) await stopFlextesa();
@@ -116,7 +121,19 @@ const FLEXTESA_IMAGE = "oxheadalpha/flextesa:20211221";
 export const POD_NAME = "flextesa-sandbox";
 
 const defaultProtocol = TezosProtocols.HANGZHOU;
-const defaultOptions: FlextesaOptions = config.networks.sandbox;
+const defaultOptions: FlextesaOptions = {
+  ...config.networks.sandbox,
+  host: config.networks.sandbox.rpc.substring(
+    0,
+    config.networks.sandbox.rpc.lastIndexOf(":")
+  ),
+  port: parseInt(
+    config.networks.sandbox.rpc.substring(
+      config.networks.sandbox.rpc.lastIndexOf(":"),
+      config.networks.sandbox.rpc.length
+    )
+  ),
+};
 
 export const startFlextesa = async (
   _options: Partial<FlextesaOptions>,
