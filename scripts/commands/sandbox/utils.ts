@@ -46,7 +46,7 @@ export async function useSandbox(options: { up?: boolean; down?: boolean }) {
   const rpc = config.networks.sandbox.rpc;
   const [host, port] = [
     rpc.substring(0, rpc.lastIndexOf(":")),
-    rpc.substring(rpc.lastIndexOf(":"), rpc.length),
+    rpc.substring(rpc.lastIndexOf(":") + 1, rpc.length),
   ];
   if (Object.keys(options).length === 0) {
     if (running) await stopFlextesa();
